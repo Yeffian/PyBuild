@@ -17,7 +17,7 @@ config = get_config()
 
 def install_pkgs():
     try:
-     print(f'Installing dependancies for {config["title"]}')
+     print(f'Installing dependencies for {config["title"]}')
      for pkg in config["dependencies"]:
          subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
     except Exception as e:
