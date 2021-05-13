@@ -1,8 +1,0 @@
-{
-  "title": "a-project",
-  "version": "0.0.1",
-  "dependencies": [
-    "flask",
-    "colorama"
-  ]
-}

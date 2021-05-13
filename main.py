@@ -1,27 +1,40 @@
-from os import path
-import subprocess
-import sys
+import os
 import json
+import argparse
 
-CONFIG_FILE_NAME = "pyconfig.json"
+parser = argparse.ArgumentParser()
+parser.add_argument("-s", "--setup", help="Use PyBuild to bootstrap your python project and generate a pyconfig file.",
+                    action="store_true")
+parser.add_argument("-i", "--install", help="Use PyBuild to update your project dependencies.", action="store_true")
+args = parser.parse_args()
 
-def get_config():
-    if path.exists(CONFIG_FILE_NAME):
-        f = open(CONFIG_FILE_NAME, 'r')
-        config = json.load(f)
-        return config
-    else:
-        print('fatal: No pyconfig.json file found.')
 
-config = get_config()
+def setup():
+    print('Welcome to the PyBuild project setup wizard. This wizard will help you set up the basic options in the pyconfig, but more can be added manually. ')
+    print('You can press ^C at any time to quit the setup process.')
 
-def install_pkgs():
-    try:
-     print(f'Installing dependancies for {config["title"]}')
-     for pkg in config["dependencies"]:
-         subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
-    except Exception as e:
-        print('fatal: Failed to import files')
-        print(e)
+    project_name = input('Project name: ')
+    ver = input('Project version: ')
+    mainf = input('Main file: ')
+    buildToExe = bool(input('Build to exe: '))
+    publishToPyPi = bool(input('Publish package to PyPi: '))
 
-install_pkgs()
+    config = {
+       "project": project_name,
+       "version": ver,
+       "main-file": mainf,
+       "build-to-exe": buildToExe,
+       "publish-to-pypi": publishToPyPi
+    }
+
+    config = json.dumps(config)
+
+    os.mkdir('src')
+    os.chdir('./src')
+
+    with open('pyconfig.json', 'w') as f:
+        f.write(str(config))
+        f.close()
+
+if args.setup:
+    setup()
