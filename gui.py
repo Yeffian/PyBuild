@@ -1,4 +1,7 @@
+import os
+
 import dearpygui.dearpygui as dpg
+from os import path
 
 
 class Themes:
@@ -19,14 +22,29 @@ dpg.create_viewport(title="PyBuild", width=500, height=500)
 dpg.bind_theme(Themes.classic)
 
 
-def _create_project(sender, data):
-	...
-
-
 def create_new_project_dialog():
-	with dpg.window(label="Project Manager", width=485, height=480, no_move=True, pos=(0, 0)):
-		dpg.add_input_text(label="Project name", width=350, default_value="Hello, world!")
+	with dpg.window(label="Project Manager", width=585, height=580, no_move=True, pos=(0, 0)):
+		dpg.add_input_text(label="Project Name", width=350, default_value="Hello, world!", tag="proj_name")
+		dpg.add_input_text(label="Project Location", width=350, default_value="C:/", tag="proj_location")
+
 		dpg.add_button(label="Create", callback=_create_project)
+
+
+
+
+def _create_project(sender, data):
+	name = dpg.get_value("proj_name")
+	location = dpg.get_value("proj_location")
+
+	if path.isdir(location):
+		os.mkdir(location + f'/src')
+		os.chdir(location + '/src')
+		print(os.getcwd())
+	else:
+		os.mkdir(location)
+		os.mkdir(location + '/src')
+		os.chdir(location + '/src')
+		print(os.getcwd())
 
 
 def start_gui():
