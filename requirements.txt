@@ -1,0 +1,2 @@
+dearpygui~=1.0.2
+argparse~=1.4.0
