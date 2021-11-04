@@ -1,5 +1,4 @@
-from dearpygui.core import *
-from dearpygui.simple import *
+import dearpygui.dearpygui as dpg
 
 
 class Themes:
@@ -15,20 +14,24 @@ class Themes:
 	red = "Red"
 
 
-set_main_window_size(500, 500)
-set_main_window_title("PyBuild")
-set_theme(Themes.classic)
-set_style_window_padding(15, 15)
+dpg.create_context()
+dpg.create_viewport(title="PyBuild", width=500, height=500)
+dpg.bind_theme(Themes.classic)
 
 def _create_project(sender, data):
 	...
 
 def create_new_project_dialog():
-	with window("Project Manager", width=485, height=480):
-		set_window_pos("Project Manager", 0, 0)
-		add_input_text("Project name", width=350, default_value="Hello, world!")
-		add_button("Create", callback=_create_project)
+	with dpg.window(label="Project Manager", width=485, height=480, no_move=True, pos=(0, 0)):
+		dpg.add_input_text(label="Project name", width=350, default_value="Hello, world!")
+		dpg.add_button(label="Create", callback=_create_project)
 
 def start_gui():
+	dpg.setup_dearpygui()
 	create_new_project_dialog()
-	start_dearpygui()
+	dpg.show_viewport()
+
+	while dpg.is_dearpygui_running():
+		dpg.render_dearpygui_frame()
+
+	dpg.destroy_context()
